@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>圖片轉base64</title>
+<style type="text/css">
+#drag-enter-notice {
+	position: fixed;
+	box-shadow: 0 0 5px rgba(0,0,0,0.6);
+	top: 50%;
+	margin-top: -25px;
+	width: 220px;
+	margin-left: -110px;
+	text-align: center;
+	left: 50%;
+	line-height: 50px;
+	background-color: #66AEFF;
+	z-index:9999;
+	display: none;
+}
+#title {
+	text-align: center;
+}
+table {
+	width: 100%;
+	border: 10px solid #ccc;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+tr {
+	border: 2px solid #ccc;
+}
+th,
+td {
+	border: 1px solid #ccc;
+}
+td {
+	vertical-align: middle;
+	text-align: center;
+	padding: 3px;
+	height: 100px;
+	position:relative;
+}
+tr > :first-child {
+	width: 30%;
+}
+img {
+	vertical-align: middle;
+	max-width: 100%;
+	max-height: 100%;
+	width:auto;
+	height:auto;
+}
+.img-info{
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:#ccc;
+	padding:3px;
+	text-align:left;
+	line-height:1.5;
+	text-align:left;
+}
+.img-wrapper{
+	height:100%;
+	width:100%;
+	position:relative;
+	line-height:0;
+	white-space:nowrap;
+}
+.img-wrapper::after{
+	content:".";
+	display:inline-block;
+	height:100%;
+	width:0;
+	visibility:hidden;
+	vertical-align:middle;
+}
+textarea {
+	width: 100%;
+	height: 100%;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	resize: vertical;
+	vertical-align:middle;
+}
+</style>
+<script type="text/javascript">
+	window.addEventListener('load',function(){
+		var table=document.querySelector('table');
+		var enterNotice=document.querySelector('#drag-enter-notice');
+		//被拖拽元素，拖拽開始
+		document.addEventListener('dragstart',function(e){
+			e.preventDefault();//禁止頁面的元素拖曳。
+			//console.log('dragstart',e);
+			//設置攜帶數據。攜帶數據只能是字符串。
+			//e.dataTransfer.setData('ax',JSON.stringify({"a":0,"b":1}));
+		},true);
+		//被拖拽元素，拖拽中,好瘋狂的屬性，即使不移動也瘋狂觸發。
+		document.addEventListener('drag',function(e){
+			//console.log('drag',e);
+		},true);
+		//被拖拽元素，拖拽結束
+		document.addEventListener('dragend',function(e){
+			//console.log('dragend',e)
+		},true);
+		//目標元素，被拖拽元素進入
+		var enterFiredC=0;
+		document.addEventListener('dragenter',function(e){
+			enterFiredC++;
+			//console.log('enter',e);
+			var types=e.dataTransfer.types;
+			if(Array.prototype.indexOf.call(types,'Files')!=-1){//拖拽的是文件。
+				enterNotice.style.display='block';
+			}
+		},true);
+		//目標元素，被拖拽元素離開
+		var leaveFiredC=0
+		document.addEventListener('dragleave',function(e){
+			//console.log('leave',e);
+			leaveFiredC++
+			if(leaveFiredC>=enterFiredC){//真正離開
+				enterFiredC=0;
+				leaveFiredC=0;
+				enterNotice.style.display='';
+			};
+		},true);
+		//目標元素，被拖拽元素，在上面移動
+		document.addEventListener('dragover',function(e){
+			//e.dataTransfer.dropEffect='none';
+			//console.log('dragover',e);
+			//允許drop事件
+			e.preventDefault();
+		},true);
+		//目標元素，被拖拽元素，仍下來了。
+		document.addEventListener('drop',function(e){
+			enterFiredC=0;
+			leaveFiredC=0;
+			//取出所有攜帶的數據
+/*			Array.prototype.forEach.call(e.dataTransfer.types,function(type,index){
+				console.log(type,e.dataTransfer.getData(type));		
+			});*/
+			//console.log('drop',e);
+			//阻止瀏覽器默認打開文件的行為
+			e.preventDefault();
+			enterNotice.style.display='';
+			var files=e.dataTransfer.files;
+			function onloadHandler(file){
+				var base64=this.result;
+				var img=new Image();
+				var row=table.insertRow(table.rows.length);
+				var cell1=row.insertCell(row.cells.length);
+				var imgSize=document.createElement('div');
+				imgSize.className='img-size';
+				var imgByte=document.createElement('div');
+				imgByte.className='img-byte';
+				imgByte.textContent=(file.size / 1024).toFixed(3) + 'KB';
+				var imgInfo=document.createElement('div');
+				imgInfo.className='img-info';
+				imgInfo.appendChild(imgSize);
+				imgInfo.appendChild(imgByte);
+				var wrapper=document.createElement('div');
+				wrapper.className='img-wrapper';
+				wrapper.appendChild(imgInfo);
+				wrapper.appendChild(img);
+				cell1.appendChild(wrapper);
+				img.onload=function(){
+					this.onload=null;
+					imgSize.textContent='w:' + this.naturalWidth + ' x h:' + this.naturalHeight;
+				};
+				img.src=base64;
+				var cell2=row.insertCell(row.cells.length);
+				var textarea=document.createElement('textarea');
+				textarea.readOnly=true;
+				textarea.value=base64;
+				cell2.appendChild(textarea);
+				//console.log(file);
+				this.onload=null;
+			};
+			Array.prototype.forEach.call(files,function(file,index){
+				//console.log(file);
+				//判斷是否是圖片文件
+				if(file.type.indexOf('image/')!=0)return;
+				var reader=new FileReader();
+				reader.onload=onloadHandler.bind(reader,file);
+				reader.readAsDataURL(file);
+			});
+		},true);
+	},true);
+</script>
+</head>
+<body>
+<div id="drag-enter-notice">
+  <h3>放開滑鼠</h3>
+</div>
+<div id='title'>
+  <h2> 把圖片拖拽進來，轉成base64 </h2>
+</div>
+<table>
+  <tr>
+    <th>預覽</th>
+    <th>base64</th>
+  </tr>
+</table>
+</body>
+</html>
