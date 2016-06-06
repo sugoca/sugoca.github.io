@@ -1,0 +1,14 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>Bing Image</os:ShortName>
+<os:Description>Bing Image</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<Image height="16" width="16" type="image/x-icon">http://www.bing.com/favicon.ico</Image>
+<SearchForm>http://www.bing.com/images/search?mkt=en-us</SearchForm>
+<os:Url type="text/html" method="GET" template="http://www.bing.com/images/search">
+  <os:Param name="q" value="{searchTerms}"/>
+  <os:Param name="go" value=""/>
+  <os:Param name="qs" value="bs"/>
+  <os:Param name="filt" value="all"/>
+   <os:Param name="mkt" value="en-us"/>
+</os:Url>
+</SearchPlugin>

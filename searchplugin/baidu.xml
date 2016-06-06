@@ -1,0 +1,11 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>百度</os:ShortName>
+<os:Description>百度</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<Image height="16" width="16" type="image/x-icon">http://icons.iconarchive.com/icons/uiconstock/socialmedia/16/Baidu-icon.png</Image>
+<SearchForm>http://www.baidu.com/</SearchForm>
+<os:Url type="text/html" method="GET" template="http://www.baidu.com/s" resultDomain="baidu.com">
+  <os:Param name="ie" value="utf-8"/>
+  <os:Param name="wd" value="{searchTerms}"/>
+</os:Url>
+</SearchPlugin>

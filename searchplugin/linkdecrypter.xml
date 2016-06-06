@@ -1,0 +1,12 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>Linkdecrypter</os:ShortName>
+<os:Description>Linkdecrypter</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<SearchForm>http://linkdecrypter.com/</SearchForm>
+<os:Url type="text/html" method="POST" template="http://linkdecrypter.com/">
+  <os:Param name="pro_links" value="{searchTerms}"/>
+  <os:Param name="modo_links" value="text"/>
+  <os:Param name="modo_recursivo" value="on"/>
+  <os:Param name="link_cache" value="on"/>
+</os:Url>
+</SearchPlugin>

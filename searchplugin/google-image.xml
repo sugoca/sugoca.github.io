@@ -1,0 +1,14 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>Google Image</os:ShortName>
+<os:Description>Google Image</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<Image height="16" width="16" type="image/x-icon">https://www.google.com/images/branding/product/ico/googleg_lodp.ico</Image>
+<SearchForm>https://www.google.com.tw/imghp?hl=zh-TW</SearchForm>
+<os:Url type="text/html" method="GET" template="https://www.google.com.tw/searchbyimage">
+  <os:Param name="image_url" value="{searchTerms}"/>
+  <os:Param name="image_content" value=""/>
+  <os:Param name="filename" value=""/>
+  <os:Param name="safe" value="off"/>
+  <os:Param name="hl" value="zh-TW"/>
+</os:Url>
+</SearchPlugin>

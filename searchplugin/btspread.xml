@@ -1,0 +1,9 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>Btspread</os:ShortName>
+<os:Description>Btspread</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<os:Image width="16" height="16">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABYElEQVQ4jdXSzyvDcRzH8df36+b7+c7/4E9YDnLh8FVqiZBWGGvD7LfNNmOH3VZyIGmllkYhkdbKiqRQykQOlIwcJKXESSm9HPw42NfBnDzP7x69e/cG/kVaHFpTAlrJgCmByu5JsDoEY8mINyXYMQ7WBBH+cah9DoVY1sDhjGBkVWVgQeVgWqFvVqE3JehMCprHwPoRLOsDaTzEsgZG196BoUWVgXmF/rT4Agamy9k/obAtDhYBzVsoeHYq6NpU6VxX2Zsx0L4iaF8StM4LWmcEbUmF/VMKbeMKW2I6yK/LNIDbljLuWySedoGXneCdBXy0gy8OkC6QgyAjIGMg+1AoQnKN4F6PzMM+8Ngh88wt88IHXgck3oYk3kclPo1KfI6Dr5140N0kV4vl3dYPwCnz3ANe+SXeBL8BXTobfLZRhfCBGTxzy6UfZ6caxpMOMG9CZcnIkQlavu4Pv/+b3gCOcrNvTm/+WAAAAABJRU5ErkJggg==</os:Image>
+<SearchForm>https://btso.pw/tags</SearchForm>
+<os:Url type="text/html" method="GET" template="https://btso.pw/search?keyword={searchTerms}" resultDomain="btso.pw">
+</os:Url>
+</SearchPlugin>
