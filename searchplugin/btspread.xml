@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
 <ShortName>BTSOW</ShortName>
-<Description>Torrents Search Engine</Description>
+<Description>BTSOW</Description>
 <InputEncoding>UTF-8</InputEncoding>
 <Image type="image/x-icon" width="16" height="16">https://btso.pw/app/bts/View/img/favicon.ico</Image>
 <Url type="text/html" template="https://btso.pw/search/{searchTerms}" method="get"/>
