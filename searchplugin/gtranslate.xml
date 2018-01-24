@@ -2,7 +2,7 @@
 <os:ShortName>Google Translate</os:ShortName>
 <os:Description>Google Translate</os:Description>
 <os:InputEncoding>UTF-8</os:InputEncoding>
-<Image height="16" width="16" type="image/x-icon">http://mycroftproject.com/installos.php/44582/gtrans_auto-arme_url.ico</Image>
-<os:Url type="text/html" method="GET" template="https://translate.google.com/#auto/zh-CN/{searchTerms}">
+<Image height="16" width="16" type="image/x-icon">http://mycroftproject.com/updateos.php/id0/google-translate.ico</Image>
+<os:Url type="text/html" method="GET" template="https://translate.google.com/#auto/zh-TW/{searchTerms}">
 </os:Url>
 </SearchPlugin>
