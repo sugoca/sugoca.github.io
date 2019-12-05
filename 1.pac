@@ -11,6 +11,6 @@ var FindProxyForURL = function(init, profiles) {
 }("+KeepSolid VPN Unlimited", {
     "+KeepSolid VPN Unlimited": function(url, host, scheme) {
         "use strict";
-        return "HTTPS us-sf.vpnunlimitedapp.com:3129";
+        return "HTTPS us-sf3.vpnunlimitedapp.com:3129";
     }
 });
