@@ -8,14 +8,10 @@ var FindProxyForURL = function(init, profiles) {
         } while (typeof result !== "string" || result.charCodeAt(0) === 43);
         return result;
     };
-}("+auto switch", {
-    "+auto switch": function(url, host, scheme) {
-        "use strict";
-        if (/$/.test(host)) return "+55";
-        return "DIRECT";
-    },
+}("+55", {
     "+55": function(url, host, scheme) {
         "use strict";
-        return "HTTPS us-sf.vpnunlimitedapp.com:3129";
+        if (/^127\.0\.0\.1$/.test(host) || /^::1$/.test(host) || /^localhost$/.test(host)) return "DIRECT";
+        return "HTTPS us-la4.vpnunlimitedapp.com:3129";
     }
 });
