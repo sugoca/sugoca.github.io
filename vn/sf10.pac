@@ -1,0 +1,1 @@
+function FindProxyForURL(url, host){return "HTTPS us-sf10.vpnunlimitedapp.com:3129";}
