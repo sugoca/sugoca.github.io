@@ -1,0 +1,1 @@
+function FindProxyForURL(url, host){return "HTTPS us-den1.vpnunlimitedapp.com:3129";}
