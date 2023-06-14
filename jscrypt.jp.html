@@ -1,0 +1,96 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/cipher-core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/pbkdf2.js"></script>
+    <script type="text/javascript">
+        function encrypt(){
+            var encypt_text=document.getElementById("encypt-text").value;
+            var pass=CryptoJS.enc.Utf8.parse(document.getElementById("encrypt-password").value);
+            var salt=CryptoJS.lib.WordArray.random(128/8);
+            var key=CryptoJS.PBKDF2(pass,salt,{keySize:256/32,iterations:100});
+            var iv=CryptoJS.lib.WordArray.random(128/8);
+            var options={iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7};
+            var encrypted=CryptoJS.AES.encrypt(encypt_text,key,options);
+            document.getElementById("transitmessage").value=salt.toString()+iv.toString()+encrypted.toString();
+        }
+        function decrypt(){
+            document.getElementById("decrypted").value="";
+            var transitmessage=document.getElementById("transitmessage").value;
+            var salt=CryptoJS.enc.Hex.parse(transitmessage.substr(0,32));
+            var iv=CryptoJS.enc.Hex.parse(transitmessage.substr(32,32));
+            var encrypted=transitmessage.substring(64);
+            var pass=CryptoJS.enc.Utf8.parse(document.getElementById("decrypt-password").value);
+            var key=CryptoJS.PBKDF2(pass,salt,{keySize:256/32,iterations:100});
+            var options={iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7};
+            var decrypted=CryptoJS.AES.decrypt(encrypted,key,options);
+            document.getElementById("decrypted").value=decrypted.toString(CryptoJS.enc.Utf8);
+        }
+        function copyTransitMessage() {
+            var transitmessageTextArea = document.getElementById("transitmessage");
+            transitmessageTextArea.select();
+            transitmessageTextArea.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand("copy");
+        }
+        function copyDecrypted() {
+            var decryptedTextArea = document.getElementById("decrypted");
+            decryptedTextArea.select();
+            decryptedTextArea.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand("copy");
+        }
+    </script>
+<style>
+    body {
+        background-color: #C7EDCC;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        flex-direction: column;
+    }
+    textarea, input[type="text"], input[type="button"] {
+        width: 100%;
+        max-width: 400px;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-radius: 5px; 
+    }
+    .copy-button {
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .copy-button:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+    <div>
+        <label for="encypt-text">Plain Text：</label><br />
+        <textarea id="encypt-text" rows="10" cols="40">Hello</textarea><br />
+        <label for="encrypt-password">Encrypt Password：</label><br />
+        <input id="encrypt-password" type="text" value="***" /><br />
+        <input id="encrypt" type="button" value="Encrypt" onclick="encrypt()" /><br />
+        <label for="transitmessage">Encrypted Text：</label><br />
+        <textarea id="transitmessage" rows="10" cols="40"></textarea>
+        <button class="copy-button" onclick="copyTransitMessage()">複製</button><br />
+        <label for="decrypt-password">Decrypt Password：</label><br />
+        <input id="decrypt-password" type="text" value="***" /><br />
+        <input id="decrypt" type="button" value="Decrypt" onclick="decrypt()" /><br />
+        <label for="decrypted">Decrypted Text：</label><br />
+        <textarea id="decrypted" rows="10" cols="40"></textarea>
+        <button class="copy-button" onclick="copyDecrypted()">複製</button>
+    </div>
+</body>
+</html>
