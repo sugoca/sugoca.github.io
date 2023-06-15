@@ -195,7 +195,7 @@ li img {
 /*程序员型界面结束*/
 
 /* 媒体查询适配手机屏幕 */
-@media (max-width: 480px) {
+@media (max-width: 750px) {
     .standard-main,
     .science-main,
     .programmer-main {
