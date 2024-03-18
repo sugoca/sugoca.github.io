@@ -8,16 +8,13 @@
     <title>Pure JavaScript TOTP Token Generator</title>
 <!-- Site Specific css -->
 <style type="text/css">
-body{
-    font-family:Arial Unicode,Arial,Sans-Serif;
-}
+
 a{
     color:#00F;
 }
 code{
     color:#090;
     font-weight:bold;
-    font-family:Consolas,Lucida Console,Monospace;
 }
 .form{
     padding:0.5em;
@@ -44,9 +41,6 @@ code{
     color:#000;
 }.totp{
     font-size:20pt;
-}
-.online-only,.offline-only{
-    display:none;
 }
 .listLabel1{
   display : inline-block;
@@ -84,12 +78,6 @@ code{
 <body>
     <div class="container">
         <h1>Pure JavaScript TOTP Token Generator</h1>
-            <p>
-                This website allows you to generate a TOTP Token from either 
-                a single TOTP secret code or a list of OTPAuth url. 
-                This page has no external dependency and can run on its own. 
-                It runs completely in your browser and can be used offline.
-            </p>
             <div id="warningDiv" class="alert alert-danger online-only">
                 <b><u>WARNING !!!</u></b>
                 &nbsp;&nbsp;[<a id="hideWarningButton">Hide Warning</a>]
