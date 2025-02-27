@@ -1,21 +1,28 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReURL</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background-color: #f5f5f5;
     }
     .container {
+      width: 90%;
       max-width: 600px;
-      margin: 0 auto;
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
     }
     input {
       width: 100%;
@@ -59,9 +66,8 @@
   
   <script>
     const apiKey = '4070ff49d794e73617513b663c974755ecd6b138919204df8a38b58d65165567c4f5d6';
-//4070df69d794ea30174b353100ba214de0d0b7328d894494ab38acc62b055f6689
 
-    // 定義呼叫 API 的函式
+
     function shortenUrl(longUrl) {
       const payload = {
         url: longUrl,
@@ -80,7 +86,8 @@
       .then(data => {
         if(data.short_url) {
           document.getElementById('result').innerHTML = 
-            '<span style="font-size:24px;"><a href="' + data.short_url + '" target="_blank">' + data.short_url + '</a></span>';
+            '<span style="font-size:24px;"><a href="' + data.short_url + 
+            '" target="_blank">' + data.short_url + '</a></span>';
           
           // 將短網址複製到剪貼簿
           navigator.clipboard.writeText(data.short_url)
