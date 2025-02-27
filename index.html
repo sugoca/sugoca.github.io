@@ -1,10 +1,44 @@
 <!doctype html>
-<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>sugoca</title>
-  <section>
+  <title>My</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    ul { list-style: none; }
+    li a {
+      display: block;
+      padding: 15px;
+      background: #007bff;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 5px 0;
+      transition: 0.3s;
+    }
+    li a:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="container">
     <ul>
       <li><a href="https://github.com/sugoca/sugoca.github.io" target="_blank"><h3>Github Edit</h3></a></li>
       <li><a href="https://sugoca.github.io/totp.html" target="_blank"><h3>TOTP</h3></a></li> 
@@ -19,200 +53,7 @@
       <li><a href="https://mycloaker.vercel.app/" target="_blank"><h3>Cloaker</h3></a></li>
       <li><a href="https://mycroftproject.com/" target="_blank"><h3>Mycroft</h3></a></li>
       <li><a href="https://sugoca.github.io/vpn.htm" target="_blank"><h3>VPN</h3></a></li>
-
     </ul>
-  </section>
-  <style>
-
-    html,body {
-      margin: 0;
-    }
-    html {
-      font-size: 13.3333vw;
-    }
-    body {
-      font-size: 16px;
-      padding: 40px 20px 0;
-      background-color: #f1f1fa;
-      font-family: sans-serif;
-    }
-    p {color: #878b99;font-weight: 300;}
-    a,a:visited {
-      color: inherit;
-      text-decoration: none;
-    }
-    header {
-      max-width: 750px;
-      margin: 0 auto;
-    }
-    header div {
-      display: flex;
-      align-items: center;
-    }
-    header div:first-child {
-      padding: 0 20px;
-    }
-    nav {
-      margin-left: auto;
-      display: flex;
-    }
-    nav a {
-      margin-left: 20px;
-    }
-    nav a:hover {
-      color: #2950de;
-    }
-    header div:last-child {
-      position: relative;
-      border-radius: 8px;
-      background-color: #000;
-      background-image: url();
-      background-size: cover;
-      background-position: 50% 50%;
-    }
-    h1 {
-      margin: 0 0 0 20px;
-      font-size: .96rem;
-      font-weight: normal;
-      background-repeat: no-repeat;
-      background-size: auto 100%;
-      background-position: 50% 50%;
-      color: #fff;
-    }
-    button {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      margin: 0;
-      padding: 0;
-      width: 44px;
-      height: 44px;
-      overflow: hidden;
-      cursor: pointer;
-      border: 0 none;
-      color: transparent;
-      background-color: transparent;
-      background-size: 16px;
-      background-position: 50% 50%;
-      background-repeat: no-repeat;
-      background-image: url(./assets/images/off.svg);
-    }
-    button.on {
-      background-image: url(./assets/images/on.svg);
-    }
-    section {
-      max-width: 750px;
-      margin: 10px auto 0;
-    }
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-gap: 20px;
-    }
-    h3 {
-      margin: 0;
-      font-size: .24rem;
-      font-weight: 500;
-    }
-    section p {margin-left: auto;}
-    ul a {
-      display: flex;
-      align-items: center;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-    }
-    ul a:hover {
-      background-color: #fafafe;
-    }
-
-    section + section {
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: 0;
-      padding: 0 20px;
-      max-width: none;
-      background-color: rgba(0,0,0,.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-
-    section + section.show {
-      display: flex;
-    }
-
-    section + section div {
-      background-color: #fff;
-      padding: 10px 20px;
-      max-width: 750px;
-      border-radius: 8px;
-    }
-    section + section a {
-      display: block;
-      text-align: center;
-      padding: 10px 0;
-      border: 3px solid #000;
-      border-top-color: #999;
-      border-left-color: #999;
-      font-size: .48rem;
-      font-weight: 500;
-      font-family: monospace;
-      margin: 12px 0 0;
-      color: #000;
-    }
-    section + section a:hover {
-      border-color: #9baae2 #2950de #2950de #9baae2;
-      color: #2950de;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px 0 40px;
-      color: #a8a8aa;
-    }
-    @media screen and (orientation: portrait) and (max-width: 750px) {
-      body {
-        padding-top: 0;
-        font-size: .3rem;
-      }
-      ul a {
-        flex-direction: column;
-      }
-      ul p {
-        margin: 0;
-      }
-      br {display: none;}
-    }
-    @media screen and (min-width: 750px) {
-      html {
-        font-size: 100px;
-      }
-    }
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #191919;
-      }
-      h3 {color: #d3d3d3;}
-      section a {
-        background-color: #232323;
-      }
-      section a:hover {
-        background-color: #38383a
-      }
-      footer {
-        color: #38383a;
-      }
-    }
-  </style>
-</head>
-<body>
-  <footer>&copy; 2023 CNM.BA</footer>
+  </div>
 </body>
 </html>
