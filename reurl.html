@@ -59,6 +59,7 @@
   
   <script>
     const apiKey = '4070ff49d794e73617513b663c974755ecd6b138919204df8a38b58d65165567c4f5d6';
+//4070df69d794ea30174b353100ba214de0d0b7328d894494ab38acc62b055f6689
 
     // 定義呼叫 API 的函式
     function shortenUrl(longUrl) {
@@ -109,9 +110,9 @@
       shortenUrl(longUrl);
     });
 
-    // 檢查網址列是否帶有 query 參數 "url"
+    // 檢查網址列是否帶有 query 參數 "u"
     const params = new URLSearchParams(window.location.search);
-    const queryUrl = params.get('url');
+    const queryUrl = params.get('u');
     if(queryUrl) {
       document.getElementById('longUrl').value = queryUrl;
       shortenUrl(queryUrl);
