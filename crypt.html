@@ -45,34 +45,65 @@
         }
     </script>
 <style>
-    body {
-        background-color: #C7EDCC;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+body {
+    background-color: #C7EDCC;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
 
-        flex-direction: column;
+textarea, input[type="text"], input[type="button"] {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #888;
+    font-size: 20px;
+}
+
+textarea {
+    resize: none;
+    height: 180px;
+}
+
+.copy-button {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.copy-button:hover {
+    background-color: #45a049;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
     }
-    textarea, input[type="text"], input[type="button"] {
-        width: 100%;
-        max-width: 400px;
-        padding: 5px;
-        margin-bottom: 10px;
-        border-radius: 5px; 
+
+    textarea, input[type="text"], input[type="button"], .copy-button {
+        font-size: 22px;
+        padding: 18px;
+        margin-bottom: 15px;
     }
-    .copy-button {
-        padding: 5px 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+
+    textarea {
+        height: 200px;
     }
-    .copy-button:hover {
-        background-color: #45a049;
-    }
+}
+
 </style>
 </head>
 <body>
