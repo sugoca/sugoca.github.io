@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReURL</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0069d9;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      word-break: break-all;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input type="text" id="longUrl" placeholder="URL" />
+    <button id="shortenBtn">Generate</button>
+    <div id="result"></div>
+  </div>
+  
+  <script>
+    const apiKey = '4070ff49d794e73617513b663c974755ecd6b138919204df8a38b58d65165567c4f5d6';
+
+    // 定義呼叫 API 的函式
+    function shortenUrl(longUrl) {
+      const payload = {
+        url: longUrl,
+        utm_source: ''  // 可依需求修改或省略
+      };
+      
+      fetch('https://api.reurl.cc/shorten', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'reurl-api-key': apiKey
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.short_url) {
+          document.getElementById('result').innerHTML = 
+            '<span style="font-size:24px;"><a href="' + data.short_url + '" target="_blank">' + data.short_url + '</a></span>';
+          
+          // 將短網址複製到剪貼簿
+          navigator.clipboard.writeText(data.short_url)
+            .then(() => {
+              console.log('短網址已複製到剪貼簿');
+            })
+            .catch(err => {
+              console.error('複製失敗：', err);
+            });
+        } else {
+          document.getElementById('result').textContent = 'Error';
+        }
+      })
+      .catch(error => {
+        console.error('發生錯誤：', error);
+        document.getElementById('result').textContent = 'Error';
+      });
+    }
+
+    // 按鈕點擊事件：手動產生短網址
+    document.getElementById('shortenBtn').addEventListener('click', function() {
+      const longUrl = document.getElementById('longUrl').value.trim();
+      if (!longUrl) {
+        alert("請先輸入一個網址");
+        return;
+      }
+      shortenUrl(longUrl);
+    });
+
+    // 檢查網址列是否帶有 query 參數 "url"
+    const params = new URLSearchParams(window.location.search);
+    const queryUrl = params.get('url');
+    if(queryUrl) {
+      document.getElementById('longUrl').value = queryUrl;
+      shortenUrl(queryUrl);
+    }
+  </script>
+</body>
+</html>
