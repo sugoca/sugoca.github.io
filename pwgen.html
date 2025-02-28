@@ -1,52 +1,128 @@
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Password Generator</title>
-		<body bgcolor="#C7EDCC">
-		<script type='text/javascript'>
-			function getpw(length, upper, lower, numbers, special) {
-				var chars = '';
-				if(upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-				if(lower) chars += 'abcdefghijklmnopqrstuvwxyz';
-				if(numbers) chars += '0123456789';
-				if(special) chars += '!#$%&*+-=?@^_~';
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        body {
+            background-color: #C7EDCC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .options label {
+            flex: 1 1 48%;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+    <script>
+        function getpw(length, upper, lower, numbers, special) {
+            var chars = '';
+            if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (numbers) chars += '0123456789';
+            if (special) chars += '!#$%&*+-=?@^_~<>{}[]';
 
-				var pw = '';
-				chars = chars.split('');
-				for(var i = 0; i < length; i++)
-					pw += chars[Math.floor(Math.random() * chars.length)];
+            var pw = '';
+            chars = chars.split('');
+            for (var i = 0; i < length; i++)
+                pw += chars[Math.floor(Math.random() * chars.length)];
 
-				return pw;
-			}
-			function generate() {
-				var length = document.getElementById('length').value;
-				var upper = lower = numbers = special = false;
-				if(document.getElementById('upper').checked) upper = true;
-				if(document.getElementById('lower').checked) lower = true;
-				if(document.getElementById('numbers').checked) numbers = true;
-				if(document.getElementById('special').checked) special = true;
-				var Password = '';
-					Password += getpw(length, upper, lower, numbers, special) + '\r\n';
-				document.getElementById('password').value = Password.substring(0, Password.length-2);
-			}
-		</script>
-	</head>
-	<body>
-		<table width="39%" border="0" cellspacing="0" cellpadding="4">
-			<tr>密碼長度：<input type="text" id='length' size="4" value="64">
-			</tr>
-			<tr>
-				<td><input type='checkbox' id='upper' value='1' checked='checked'>大寫
-				<input type='checkbox' id='lower' value='1' checked='checked'>小寫
-				<input type='checkbox' id='numbers' value='1' checked='checked'>數字
-				<input type='checkbox' id='special' value='1' checked='checked'>特殊
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan='2' class='submit'><input type='submit' id='generate' value='Get Password' onclick='generate();'></td>
-			</tr>
-	</table>
-	<input type='text' id='password' size='50' onmouseover="this.focus()" onfocus="this.select()">
-	</body>
+            return pw;
+        }
+
+        function generate() {
+            var length = document.getElementById('length').value;
+            var upper = document.getElementById('upper').checked;
+            var lower = document.getElementById('lower').checked;
+            var numbers = document.getElementById('numbers').checked;
+            var special = document.getElementById('special').checked;
+            
+            if (!upper && !lower && !numbers && !special) {
+                alert("請至少選擇一種字元類型");
+                return;
+            }
+            
+            var password = getpw(length, upper, lower, numbers, special);
+            document.getElementById('password').value = password;
+        }
+
+        function copyToClipboard() {
+            var passwordField = document.getElementById('password');
+            if (passwordField.value) {
+                navigator.clipboard.writeText(passwordField.value).catch(err => {
+                    console.error("複製失敗: ", err);
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <input type="number" id="length" min="4" max="128" value="16">
+        </div>
+        
+        <div class="options">
+            <label><input type='checkbox' id='upper' checked> ABC</label>
+            <label><input type='checkbox' id='lower' checked> abc</label>
+            <label><input type='checkbox' id='numbers' checked> 123</label>
+            <label><input type='checkbox' id='special' checked> !@#</label>
+        </div>
+        
+        <button onclick='generate();'>Generate</button>
+        <div class="input-group">
+            <input type='text' id='password' readonly>
+        </div>
+        <button onclick='copyToClipboard();'>Copy</button>
+    </div>
+</body>
 </html>
