@@ -1,0 +1,95 @@
+{
+  "ForgotPasswordPage": {
+    "ResetYourPassword": "Zresetuj swoje hasło",
+    "ConfirmLinkSendTitle": "Link potwierdzający został wysłany",
+    "ConfirmLinkSendMessage": "Link do zmiany hasła został wysłany na adres {{email}}",
+    "UnableToChangeYourPassword": "Nie można zmienić hasła",
+    "UnknownEmail": "Nieznany adres e-mail",
+    "UserDoesNotExists": "Ten użytkownik nie istnieje. Nie możesz korzystać z LessPass."
+  },
+  "Common": {
+    "Send": "Wyślij",
+    "Cancel": "Anuluj",
+    "Change": "Zmień",
+    "Hide": "Ukryj",
+    "Show": "Pokaż",
+    "Copied": "Skopiowano",
+    "Copy": "Kopiuj",
+    "Save": "Zapisz",
+    "Reset": "Resetuj"
+  },
+  "MyProfilePage": {
+    "Welcome": "Witaj, {{email}}",
+    "ThankYouMessage": "Twoje konto jest przechowywane na serwerze https://api.lesspass.com jako podziękowanie za bycie jednym z pierwszych użytkowników LessPass.",
+    "SignOut": "Wyloguj się"
+  },
+  "SignInForm": {
+    "Email": "E-mail",
+    "UsernamePlaceholder": "kontakt@przyklad.org",
+    "LessPassServer": "Serwer LessPass",
+    "MasterPassword": "Hasło główne"
+  },
+  "PasswordResetConfirmForm": {
+    "NewPassword": "Nowe hasło"
+  },
+  "PasswordProfile": {
+    "MasterPassword": "Hasło główne",
+    "Site": "Strona",
+    "GenerateAndCopy": "Generuj i kopiuj",
+    "PasswordProfileCopiedInClipboard": "URL profilu hasła został skopiowany do schowka.",
+    "Share": "Udostępnij",
+    "Clear": "Wyczyść",
+    "Login": "Login",
+    "Options": "Opcje",
+    "Length": "Długość",
+    "Counter": "Licznik",
+    "C": "C"
+  },
+  "PasswordResetPage": {
+    "ChangePassword": "Zmień swoje hasło",
+    "PasswordChangedSuccessfullyTitle": "Twoje hasło zostało pomyślnie zmienione.",
+    "PasswordChangedSuccessfullyMessage": "Możesz teraz się zalogować.",
+    "CantChangePasswordTitle": "Nie można zmienić hasła.",
+    "CantChangePasswordMessage": "Spróbuj ponownie za kilka minut."
+  },
+  "SignInPage": {
+    "SignInToLessPass": "Zaloguj się do LessPass",
+    "UnableToSignInTitle": "Nie można się zalogować",
+    "UnableToSignInMessage": "Podane dane są nieprawidłowe lub użytkownik nie istnieje.",
+    "ForgotPassword": "Zapomniałeś hasła?",
+    "SignIn": "Zaloguj się",
+    "LessPassServerDecommissioned": "Baza danych LessPass została wyłączona. Musisz używać własnego serwera."
+  },
+  "Header": {
+    "passwords": "Hasła",
+    "settings": "Ustawienia",
+    "signIn": "Zaloguj się",
+    "myProfile": "Mój profil",
+    "SignOut": "Wyloguj się"
+  },
+  "NewPasswordProfilePage": {
+    "NewPassword": "Nowe hasło"
+  },
+  "PasswordProfilePage": {
+    "NoPasswordWithId": "Nie ma profilu hasła o ID: {{id}}",
+    "GoListPasswordProfiles": "Powrót do listy profili haseł.",
+    "DeletePassword": "Usuń hasło",
+    "AreYouSure": "Czy na pewno chcesz usunąć profil {{site}}/{{login}}?",
+    "YesIAmSure": "Tak, jestem pewien",
+    "NoIAmNotSure": "Nie",
+    "Delete": "Usuń"
+  },
+  "PasswordProfilesPage": {
+    "NoSavedPasswordProfiles": "Nie masz zapisanych profili haseł.",
+    "SaveAPassword": "Zapisz hasło",
+    "SearchPasswords": "Szukaj haseł...",
+    "NewPassword": "Nowe hasło"
+  },
+  "Settings": {
+    "removeSubDomain": "Usuń subdomenę z witryny",
+    "FocusField": "Pole ostrości",
+    "SignIn": "Zaloguj się",
+    "EncryptMyMasterPassword": "Szyfruj moje hasło główne przy logowaniu",
+    "Title": "Ustawienia"
+  }
+}
