@@ -2,15 +2,23 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>push</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telegram 上傳/貼上</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; margin: 0; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #fafafa;
+    }
     #drop-zone {
-      border: 3px dashed #999;
-      padding: 40px;
+      border: 3px dashed #aaa;
+      border-radius: 10px;
+      padding: 30px;
       text-align: center;
       color: #666;
-      margin: 0 auto;
+      background: #fff;
+      cursor: pointer;
     }
     #drop-zone.dragover {
       background-color: #eef;
@@ -18,12 +26,24 @@
     #notice {
       margin-top: 20px;
       font-weight: bold;
+      word-break: break-word;
+    }
+    #file-input {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      #drop-zone {
+        padding: 20px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div id="drop-zone">drop</div>
+<h2>傳送到 Telegram</h2>
+<div id="drop-zone">點此選檔 或 拖拉／貼上文字或檔案</div>
+<input type="file" id="file-input" multiple>
 <div id="notice"></div>
 
 <script>
@@ -31,6 +51,7 @@
   const chatId = '336138234';
 
   const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
 
   function showNotice(message, isError = false) {
     const notice = document.getElementById('notice');
@@ -67,7 +88,7 @@
     .then(res => res.json())
     .then(data => {
       console.log('檔案已上傳:', data);
-      showNotice(`檔案「${file.name}」已成功上傳到 Telegram`);
+      showNotice(`檔案「${file.name}」已成功上傳`);
     })
     .catch(err => {
       console.error('上傳錯誤:', err);
@@ -75,7 +96,7 @@
     });
   }
 
-  // 傳送網址列 ? 文字訊息
+  // 支援網址 ?text 自動傳送文字
   const urlParams = new URLSearchParams(window.location.search);
   const message = urlParams.toString();
   if (message) {
@@ -83,32 +104,37 @@
     sendMessageToTelegram(decodedMessage);
   }
 
-  // 拖拉功能
+  // 拖拉上傳
   window.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('dragover');
   });
-
   window.addEventListener('dragleave', () => {
     dropZone.classList.remove('dragover');
   });
-
   window.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('dragover');
-
     const files = e.dataTransfer.files;
-    for (let file of files) {
-      uploadFileToTelegram(file);
-    }
+    for (let file of files) uploadFileToTelegram(file);
   });
 
-  // Ctrl+V 貼上功能
+  // 點擊區塊 -> 選檔
+  dropZone.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', () => {
+    const files = fileInput.files;
+    for (let file of files) uploadFileToTelegram(file);
+  });
+
+  // 支援 Ctrl+V 貼上圖片/文字（手機也有效）
   window.addEventListener('paste', (e) => {
     const clipboardData = e.clipboardData;
     if (!clipboardData) return;
 
-    // 若貼上的是檔案（圖片、PDF...）
+    // 若是檔案
     for (let item of clipboardData.items) {
       if (item.kind === 'file') {
         const file = item.getAsFile();
@@ -119,7 +145,7 @@
       }
     }
 
-    // 若貼上的是文字
+    // 若是文字
     const text = clipboardData.getData('text');
     if (text) {
       sendMessageToTelegram(text);
