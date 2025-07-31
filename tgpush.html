@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Telegram 上傳/貼上</title>
   <style>
     body {
@@ -28,6 +28,28 @@
       font-weight: bold;
       word-break: break-word;
     }
+    #progress-container {
+      margin-top: 20px;
+    }
+    .progress-wrapper {
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      height: 20px;
+      width: 100%;
+      background-color: #eee;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background-color: #4caf50;
+      text-align: center;
+      color: white;
+      line-height: 20px;
+      font-size: 12px;
+    }
     #file-input {
       display: none;
     }
@@ -43,8 +65,9 @@
 
 <h2>傳送到 Telegram</h2>
 <div id="drop-zone">點此選檔 或 拖拉／貼上文字或檔案</div>
-<input type="file" id="file-input" multiple>
+<input type="file" id="file-input" multiple />
 <div id="notice"></div>
+<div id="progress-container"></div>
 
 <script>
   const botToken = '5005520760:AAGy7dA4PWaYpXGrPYismdtLZ_97Av00VKs';
@@ -52,11 +75,71 @@
 
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
+  const progressContainer = document.getElementById('progress-container');
 
   function showNotice(message, isError = false) {
     const notice = document.getElementById('notice');
     notice.textContent = message;
     notice.style.color = isError ? 'red' : 'green';
+  }
+
+  function createProgressBar(fileName) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'progress-wrapper';
+
+    const label = document.createElement('div');
+    label.textContent = fileName;
+
+    const bar = document.createElement('div');
+    bar.className = 'progress-bar';
+
+    const barInner = document.createElement('div');
+    barInner.className = 'progress-bar-inner';
+    bar.appendChild(barInner);
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(bar);
+    progressContainer.appendChild(wrapper);
+
+    return barInner;
+  }
+
+  function uploadFileToTelegram(file) {
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('document', file);
+
+    const progressBar = createProgressBar(file.name);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendDocument`, true);
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        progressBar.style.width = percent + '%';
+        progressBar.textContent = percent + '%';
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        progressBar.style.backgroundColor = '#4caf50';
+        progressBar.textContent = '完成';
+      } else {
+        progressBar.style.backgroundColor = 'red';
+        progressBar.textContent = '失敗';
+        showNotice('檔案上傳失敗', true);
+      }
+    };
+
+    xhr.onerror = () => {
+      progressBar.style.backgroundColor = 'red';
+      progressBar.textContent = '錯誤';
+      showNotice('上傳錯誤', true);
+    };
+
+    xhr.send(formData);
   }
 
   function sendMessageToTelegram(text) {
@@ -67,7 +150,7 @@
     })
     .then(res => res.json())
     .then(data => {
-      console.log('文字訊息發送成功:', data);
+      console.log('訊息發送成功:', data);
       showNotice(`訊息已送出：「${text}」`);
     })
     .catch(err => {
@@ -76,27 +159,7 @@
     });
   }
 
-  function uploadFileToTelegram(file) {
-    const formData = new FormData();
-    formData.append('chat_id', chatId);
-    formData.append('document', file);
-
-    fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log('檔案已上傳:', data);
-      showNotice(`檔案「${file.name}」已成功上傳`);
-    })
-    .catch(err => {
-      console.error('上傳錯誤:', err);
-      showNotice('檔案上傳失敗', true);
-    });
-  }
-
-  // 支援網址 ?text 自動傳送文字
+  // URL 文字訊息
   const urlParams = new URLSearchParams(window.location.search);
   const message = urlParams.toString();
   if (message) {
@@ -119,7 +182,7 @@
     for (let file of files) uploadFileToTelegram(file);
   });
 
-  // 點擊區塊 -> 選檔
+  // 點擊選檔
   dropZone.addEventListener('click', () => {
     fileInput.click();
   });
@@ -129,12 +192,11 @@
     for (let file of files) uploadFileToTelegram(file);
   });
 
-  // 支援 Ctrl+V 貼上圖片/文字（手機也有效）
+  // Ctrl+V 或手機貼上文字或圖片
   window.addEventListener('paste', (e) => {
     const clipboardData = e.clipboardData;
     if (!clipboardData) return;
 
-    // 若是檔案
     for (let item of clipboardData.items) {
       if (item.kind === 'file') {
         const file = item.getAsFile();
@@ -145,7 +207,6 @@
       }
     }
 
-    // 若是文字
     const text = clipboardData.getData('text');
     if (text) {
       sendMessageToTelegram(text);
