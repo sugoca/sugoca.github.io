@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>push</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; margin: 0; }
+    #drop-zone {
+      border: 3px dashed #999;
+      padding: 40px;
+      text-align: center;
+      color: #666;
+      margin: 0 auto;
+    }
+    #drop-zone.dragover {
+      background-color: #eef;
+    }
+    #notice {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div id="drop-zone">drop</div>
+<div id="notice"></div>
+
+<script>
+  const botToken = '5005520760:AAGy7dA4PWaYpXGrPYismdtLZ_97Av00VKs';
+  const chatId = '336138234';
+
+  const dropZone = document.getElementById('drop-zone');
+
+  function showNotice(message, isError = false) {
+    const notice = document.getElementById('notice');
+    notice.textContent = message;
+    notice.style.color = isError ? 'red' : 'green';
+  }
+
+  function sendMessageToTelegram(text) {
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('文字訊息發送成功:', data);
+      showNotice(`訊息已送出：「${text}」`);
+    })
+    .catch(err => {
+      console.error('訊息錯誤:', err);
+      showNotice('文字訊息傳送失敗', true);
+    });
+  }
+
+  function uploadFileToTelegram(file) {
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('document', file);
+
+    fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('檔案已上傳:', data);
+      showNotice(`檔案「${file.name}」已成功上傳到 Telegram`);
+    })
+    .catch(err => {
+      console.error('上傳錯誤:', err);
+      showNotice('檔案上傳失敗', true);
+    });
+  }
+
+  // 傳送網址列 ? 文字訊息
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.toString();
+  if (message) {
+    const decodedMessage = decodeURIComponent(Object.keys(Object.fromEntries(urlParams))[0]);
+    sendMessageToTelegram(decodedMessage);
+  }
+
+  // 拖拉功能
+  window.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  window.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  window.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+
+    const files = e.dataTransfer.files;
+    for (let file of files) {
+      uploadFileToTelegram(file);
+    }
+  });
+
+  // Ctrl+V 貼上功能
+  window.addEventListener('paste', (e) => {
+    const clipboardData = e.clipboardData;
+    if (!clipboardData) return;
+
+    // 若貼上的是檔案（圖片、PDF...）
+    for (let item of clipboardData.items) {
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) {
+          uploadFileToTelegram(file);
+          return;
+        }
+      }
+    }
+
+    // 若貼上的是文字
+    const text = clipboardData.getData('text');
+    if (text) {
+      sendMessageToTelegram(text);
+    }
+  });
+</script>
+
+</body>
+</html>
