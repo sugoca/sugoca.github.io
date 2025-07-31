@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Telegram 上傳/貼上</title>
+  <title>Push</title>
   <style>
     body {
-      font-family: sans-serif;
       padding: 20px;
       margin: 0;
       background: #fafafa;
@@ -14,7 +13,7 @@
     #drop-zone {
       border: 3px dashed #aaa;
       border-radius: 10px;
-      padding: 30px;
+      padding: 100px;
       text-align: center;
       color: #666;
       background: #fff;
@@ -53,6 +52,18 @@
     #file-input {
       display: none;
     }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+      resize: vertical;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
     @media (max-width: 600px) {
       #drop-zone {
         padding: 20px;
@@ -63,10 +74,15 @@
 </head>
 <body>
 
-<h2>傳送到 Telegram</h2>
-<div id="drop-zone">點此選檔 或 拖拉／貼上文字或檔案</div>
+<div id="drop-zone"></div>
 <input type="file" id="file-input" multiple />
 <div id="notice"></div>
+
+<!-- 文字輸入與送出 -->
+<textarea id="text-input" rows="3" placeholder=""></textarea>
+<button id="send-btn">Send</button>
+
+<!-- 進度條區域 -->
 <div id="progress-container"></div>
 
 <script>
@@ -76,6 +92,8 @@
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
   const progressContainer = document.getElementById('progress-container');
+  const sendBtn = document.getElementById('send-btn');
+  const textInput = document.getElementById('text-input');
 
   function showNotice(message, isError = false) {
     const notice = document.getElementById('notice');
@@ -159,7 +177,7 @@
     });
   }
 
-  // URL 文字訊息
+  // 處理 URL 傳訊息
   const urlParams = new URLSearchParams(window.location.search);
   const message = urlParams.toString();
   if (message) {
@@ -167,7 +185,7 @@
     sendMessageToTelegram(decodedMessage);
   }
 
-  // 拖拉上傳
+  // 拖拉
   window.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('dragover');
@@ -186,13 +204,12 @@
   dropZone.addEventListener('click', () => {
     fileInput.click();
   });
-
   fileInput.addEventListener('change', () => {
     const files = fileInput.files;
     for (let file of files) uploadFileToTelegram(file);
   });
 
-  // Ctrl+V 或手機貼上文字或圖片
+  // Ctrl+V 貼上文字或圖片
   window.addEventListener('paste', (e) => {
     const clipboardData = e.clipboardData;
     if (!clipboardData) return;
@@ -210,6 +227,25 @@
     const text = clipboardData.getData('text');
     if (text) {
       sendMessageToTelegram(text);
+    }
+  });
+
+  // 點擊送出按鈕
+  sendBtn.addEventListener('click', () => {
+    const text = textInput.value.trim();
+    if (text) {
+      sendMessageToTelegram(text);
+      textInput.value = '';
+    } else {
+      showNotice('請輸入訊息再送出', true);
+    }
+  });
+
+  // Ctrl + Enter 送出訊息
+  textInput.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+      e.preventDefault();
+      sendBtn.click();
     }
   });
 </script>
