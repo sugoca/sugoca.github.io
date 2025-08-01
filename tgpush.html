@@ -5,20 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Push</title>
   <style>
+#container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+textarea, button, #drop-zone {
+  width: 100%;
+}
     body {
       padding: 20px;
       margin: 0;
       background: #fafafa;
     }
-    #drop-zone {
-      border: 3px dashed #aaa;
-      border-radius: 10px;
-      padding: 100px;
-      text-align: center;
-      color: #666;
-      background: #fff;
-      cursor: pointer;
-    }
+#drop-zone {
+  border: 3px dashed #aaa;
+  border-radius: 10px;
+  min-height: 150px;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  background: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+}
     #drop-zone.dragover {
       background-color: #eef;
     }
@@ -88,17 +102,20 @@ button:hover {
   </style>
 </head>
 <body>
+<body>
+  <div id="container">
+    <div id="drop-zone">拖拉或點擊上傳檔案</div>
+    <input type="file" id="file-input" multiple />
+    <div id="notice"></div>
 
-<div id="drop-zone"></div>
-<input type="file" id="file-input" multiple />
-<div id="notice"></div>
+    <!-- 文字輸入與送出 -->
+    <textarea id="text-input" rows="3" placeholder="請輸入訊息..."></textarea>
+    <button id="send-btn">Send</button>
 
-<!-- 文字輸入與送出 -->
-<textarea id="text-input" rows="3" placeholder=""></textarea>
-<button id="send-btn">Send</button>
-
-<!-- 進度條區域 -->
-<div id="progress-container"></div>
+    <!-- 進度條區域 -->
+    <div id="progress-container"></div>
+  </div>
+</body>
 
 <script>
   const botToken = '5005520760:AAGy7dA4PWaYpXGrPYismdtLZ_97Av00VKs';
