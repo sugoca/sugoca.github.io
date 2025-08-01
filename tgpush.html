@@ -147,17 +147,17 @@
     xhr.onload = () => {
       if (xhr.status === 200) {
         progressBar.style.backgroundColor = '#4caf50';
-        progressBar.textContent = '完成';
+        progressBar.textContent = 'Done';
       } else {
         progressBar.style.backgroundColor = 'red';
-        progressBar.textContent = '失敗';
+        progressBar.textContent = 'Fail';
         showNotice('檔案上傳失敗', true);
       }
     };
 
     xhr.onerror = () => {
       progressBar.style.backgroundColor = 'red';
-      progressBar.textContent = '錯誤';
+      progressBar.textContent = 'Error';
       showNotice('上傳錯誤', true);
     };
 
