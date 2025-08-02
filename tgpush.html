@@ -40,11 +40,16 @@ textarea, button, #drop-zone {
     #drop-zone.dragover {
       background-color: #eef;
     }
-    #notice {
-      margin-top: 20px;
-      font-weight: bold;
-      word-break: break-word;
-    }
+#notice {
+  margin-top: 20px;
+  font-weight: bold;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
     #progress-container {
       margin-top: 20px;
     }
@@ -179,7 +184,7 @@ button:hover {
     xhr.onload = () => {
       if (xhr.status === 200) {
         progressBar.style.backgroundColor = '#4caf50';
-        progressBar.textContent = '✅';
+        progressBar.textContent = 'Done';
       } else {
         progressBar.style.backgroundColor = 'red';
         progressBar.textContent = 'Fail';
@@ -205,7 +210,7 @@ button:hover {
     .then(res => res.json())
     .then(data => {
       console.log('訊息發送成功:', data);
-      showNotice(`Done：「${text}」`);
+      showNotice(`✅：${text}`);
     })
     .catch(err => {
       console.error('訊息錯誤:', err);
