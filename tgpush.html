@@ -218,13 +218,12 @@ button:hover {
     });
   }
 
-  // 處理 URL 傳訊息
-  const urlParams = new URLSearchParams(window.location.search);
-  const message = urlParams.toString();
-  if (message) {
-    const decodedMessage = decodeURIComponent(Object.keys(Object.fromEntries(urlParams))[0]);
-    sendMessageToTelegram(decodedMessage);
-  }
+// 抓網址 ? 後面的全部字串（包含任何 ? & 等符號）
+const rawMessage = window.location.search.substring(1); 
+if (rawMessage) {
+  const decodedMessage = decodeURIComponent(rawMessage);
+  sendMessageToTelegram(decodedMessage);
+}
 
   // 拖拉
   window.addEventListener('dragover', (e) => {
