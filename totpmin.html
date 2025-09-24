@@ -2,18 +2,80 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>web-based two factor authentication generator</title>
+  <title>Web-based 2FA Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    p {
+      margin: 8px 0;
+      color: #666;
+    }
+    input {
+      border: 1px solid #ccc;
+      width: 90%;
+      max-width: 360px;
+      outline: none;
+      color: #333;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+    #webCode {
+      font-size: 48px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 12px 0;
+      color: #222;
+      user-select: none;
+    }
+    #webRefresh {
+      color: red;
+      font-size: 18px;
+      margin-top: 6px;
+    }
+    #copyMsg {
+      color: green;
+      font-size: 14px;
+      margin-top: 6px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<div style="text-align:center;margin-top:320px">
-  <p style="color: #666;">Secret</p>
-  <input type="text" id="webSec" style="margin:0 auto;border:solid 1px #ccc;width:360px;outline: none;color: #cccccc;padding: 4px;">
-  <p style="color: #666;">Code</p>
-  <div id="webCode" style="font-size:40px;cursor: pointer;"></div>
-  <p style="color: #666;">Expire</p>
-  <div id="webRefresh" style="color: red;">2</div>
-</div>
+  <p>Secret</p>
+  <input type="text" id="webSec" placeholder="Secret">
+  
+  <p>Code</p>
+  <div id="webCode">123456</div>
+  <div id="copyMsg">✅ OK</div>
+  
+  <p>Expire</p>
+  <div id="webRefresh">2</div>
+
+  <script>
+    const webCode = document.getElementById("webCode");
+    const copyMsg = document.getElementById("copyMsg");
+
+    webCode.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(webCode.textContent);
+        copyMsg.style.display = "block";
+        setTimeout(() => copyMsg.style.display = "none", 500);
+      } catch (err) {
+        alert("Error: " + err);
+      }
+    });
+  </script>
 </body>
 </html>
 <script>
