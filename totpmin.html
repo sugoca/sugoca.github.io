@@ -122,7 +122,7 @@
   }
 
   // parse url param
-  const p = window.location.href.split('?code=');
+  const p = window.location.href.split('?c=');
   k = p.length > 1? p[1]: '';
   document.querySelector('#webSec').value = k;
   isprivate = window.location.href.indexOf('?private=1') !== -1;
