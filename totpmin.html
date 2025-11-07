@@ -81,6 +81,7 @@
   let k = '';
   let lastCode = '';
   let isprivate = false;
+
   function key2code(K,t) {
     function sha1(C){
       function L(x,b){return x<<b|x>>>32-b;}
@@ -115,30 +116,44 @@
     var e = Math.floor(new Date().getTime()/1000);
     var t = Math.floor(e/30);
     let left = 30 - (e - (t*30));
-    let c = key2code(k, t);
+    // 若 k 為空白或非 base32，key2code 可能會失敗 -> 簡單處理：只在有 k 時計算
+    let c = k ? key2code(k, t) : '------';
     if (lastCode != c) document.querySelector('#webCode').innerHTML = c;
     lastCode = c;
     document.querySelector('#webRefresh').innerHTML = left;
   }
 
-  // parse url param
-  const p = window.location.href.split('?c=');
-  k = p.length > 1? p[1]: '';
+  // 以 URLSearchParams 解析查詢參數（更穩健）
+  const params = new URLSearchParams(window.location.search);
+  // 優先支援 code，備援支援 c（兼容舊參數）
+  let raw = params.get('code') || params.get('c') || '';
+  // 解碼並移除空白，若有 fragment (#...) 則不包含
+  try { raw = raw ? decodeURIComponent(raw) : raw; } catch(e) {}
+  raw = raw.replace(/\s+/g, '');
+  k = raw;
   document.querySelector('#webSec').value = k;
-  isprivate = window.location.href.indexOf('?private=1') !== -1;
 
-  setInterval(update, 1000);
+  // private 參數明確比對值 '1'
+  isprivate = params.get('private') === '1';
+
+  // 立刻更新一次，並每秒更新
   update();
+  setInterval(update, 1000);
 
   const onSecretUpdate = (e) => {
     k = e.target.value.trim();
     k = k.replace(/\s+/g, '');
     e.target.value = k;
-    if (!isprivate) window.history.pushState({state:1}, document.title,'?code='+k);
+    // 只有非 private 情況下才把 secret 寫入 URL（且 encode）
+    if (!isprivate) {
+      const newQuery = '?code=' + encodeURIComponent(k);
+      window.history.pushState({state:1}, document.title, newQuery);
+    }
     update();
   };
 
-  document.querySelector('#webSec').addEventListener('keyup', onSecretUpdate);
-  document.querySelector('#webSec').addEventListener('input', onSecretUpdate);
-  document.querySelector('#webSec').addEventListener('focus', e => e.target.setSelectionRange(0, e.target.value.length));
+  const secInput = document.querySelector('#webSec');
+  secInput.addEventListener('keyup', onSecretUpdate);
+  secInput.addEventListener('input', onSecretUpdate);
+  secInput.addEventListener('focus', e => e.target.setSelectionRange(0, e.target.value.length));
 </script>
