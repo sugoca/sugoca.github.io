@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>imgbb bed</title>
-    <style>
+<style>
         body {
             max-width: 650px;
-            margin: 40px auto;
+            /* 1. 移除原本的 40px 上下外距，改為左右自動置中 */
+            margin: 0 auto; 
             padding: 20px;
             background-color: #f8f9fa;
             color: #333;
+
+            /* 2. 核心：啟用 Flexbox 佈局達成上下左右置中 */
+            display: flex;
+            flex-direction: column;   /* 讓裡面的元件（h2, dropZone等）維持從上到下排列 */
+            justify-content: center;  /* 垂直置中 */
+            align-items: stretch;     /* 讓裡面的元件寬度填滿 max-width */
+            min-height: 100vh;        /* 讓畫面的基礎高度等於瀏覽器視窗高度 */
+            box-sizing: border-box;   /* 防止 padding 撐破 100vh 導致出現滾動條 */
         }
         h2 {
             text-align: center;
