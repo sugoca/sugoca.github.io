@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Encrypt Text</title>
+<meta name="color-scheme" content="light dark">
+<style>
+:root{
+  --bg:#fbfaf8;--fg:#141412;--muted:#8a8884;--line:#ece9e3;--card:#ffffff;--input:#ffffff;
+  --ok:#0a7a42;--err:#d12d2d;--acc:#141412;--shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0e0e0e;--fg:#ededed;--muted:#9a9a9a;--line:#1f1f1f;--card:#151515;--input:#111;--acc:#fff;--shadow:none}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-family:ui-sans-system,-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);min-height:100dvh;line-height:1.5;transition:background .2s,color .2s}
+.wrap{width:100%;max-width:720px;margin:0 auto;padding:clamp(16px,4vw,32px) clamp(14px,3vw,24px) 48px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px}
+h1{font-size:clamp(14px,2.5vw,15px);font-weight:650;letter-spacing:.02em}
+.sub{font-size:clamp(11px,2vw,12px);color:var(--muted);margin-top:8px;line-height:1.6;max-width:56ch}
+.tabs{display:inline-flex;gap:4px;margin:24px 0 16px;background:var(--card);border:1px solid var(--line);padding:4px;border-radius:999px;box-shadow:var(--shadow)}
+.tab{font:inherit;font-size:12px;padding:7px 14px;border-radius:999px;border:0;background:transparent;color:var(--muted);cursor:pointer;transition:.15s}
+.tab.on{background:var(--acc);color:var(--bg);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(12px,2.5vw,16px);box-shadow:var(--shadow);margin-top:14px}
+label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+label .hint{text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)}
+textarea,input{width:100%;background:var(--input);border:1px solid var(--line);color:var(--fg);border-radius:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.6;padding:12px 14px;outline:none;transition:border .15s,background .2s}
+textarea:focus,input:focus{border-color:var(--fg)}
+textarea{min-height:clamp(110px,24vw,140px);resize:vertical}
+textarea#out{min-height:clamp(120px,28vw,160px)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.row input{flex:1 1 200px}
+.btn{font:inherit;font-size:11px;font-weight:600;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:var(--fg)}
+.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+#status{font-size:11px;min-height:14px}
+#status.ok{color:var(--ok)}#status.err{color:var(--err)}
+.eye{padding:0 12px;background:var(--input);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;cursor:pointer;color:var(--muted);display:flex;align-items:center}
+#pw{border-radius:12px 0 0 12px}
+.pw-wrap{display:flex;width:100%}
+.grid{display:grid;gap:14px}
+@media (min-width: 700px){ .grid{grid-template-columns:1fr 1fr} .grid .full{grid-column:1/-1} }
+.live{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--ok);font-weight:600}
+.live i{width:6px;height:6px;border-radius:50%;background:var(--ok);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);line-height:1.7}
+.badge{font-size:9px;padding:2px 6px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+/* mobile tweaks */
+@media (max-width: 480px){
+  .tabs{width:100%;justify-content:center}
+  .tab{flex:1;text-align:center}
+  .row .btn{flex:1 1 calc(50% - 8px)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="badge">AES-256-GCM · 600k PBKDF2</span>
+</header>
+
+<div class="tabs" role="tablist">
+<button id="tEnc" class="tab on" role="tab" aria-selected="true" onclick="setMode('enc')">Encrypt</button>
+<button id="tDec" class="tab" role="tab" onclick="setMode('dec')">Decrypt</button>
+</div>
+
+<div class="grid">
+<div class="card full">
+<textarea id="inp" placeholder="輸入文字，自動即時加密..."></textarea>
+</div>
+
+<div class="card">
+<label>Password</label>
+<div class="pw-wrap">
+<input id="pw" type="text" value="a" autocomplete="off" spellcheck="false">
+<button class="eye" id="eyeBtn" onclick="togglePw()" aria-label="toggle">👁</button>
+</div>
+<div class="row">
+<button class="btn" onclick="clearAll()">Clear</button>
+<button class="btn primary" onclick="copyOut()">Copy 結果</button>
+<span id="status"></span>
+</div>
+</div>
+
+<div class="card">
+<label id="lOut">Output </label>
+<textarea id="out" readonly placeholder="結果即時出現..."></textarea>
+<div class="row">
+<button class="btn" onclick="useAsInput()">↔ 結果→輸入框</button>
+<button class="btn" onclick="swapMode()">⇄ 加密/解密切換</button>
+</div>
+</div>
+</div>
+
+<div class="foot">
+<div>格式: <code>base64(0x01 | 16-byte salt | 12-byte IV | ciphertext+tag)</code> · Web Crypto API</div>
+<div>手機 / 平板 / PC 自適應 · 淺色/深色自動跟隨系統 · 0 外部請求</div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let mode='enc', runId=0, timer=null;
+const enc=new TextEncoder(), dec=new TextDecoder();
+
+function setMode(m){
+ mode=m;
+ $('tEnc').className='tab'+(m==='enc'?' on':'');
+ $('tDec').className='tab'+(m==='dec'?' on':'');
+ $('tEnc').setAttribute('aria-selected', m==='enc');
+ $('tDec').setAttribute('aria-selected', m==='dec');
+ $('lIn').innerHTML=m==='enc'?'Text to encrypt <span class="hint">— 即時</span>':'Ciphertext <span class="hint">— 即時解密</span>';
+ $('lOut').innerHTML=m==='enc'?'Ciphertext <span class="hint">— 即時</span>':'Plaintext <span class="hint">— 即時</span>';
+ $('inp').placeholder=m==='enc'?'輸入文字，自動即時加密...':'貼上 Base64 密文，自動即時解密...';
+ schedule();
+}
+function isB64(s){ return s.length>60 && /^[A-Za-z0-9+/=_\-\s]+$/.test(s); }
+function togglePw(){ const p=$('pw'); p.type=p.type==='text'?'password':'text'; $('eyeBtn').textContent=p.type==='text'?'🙈':'👁'; }
+
+$('inp').addEventListener('input', ()=>{
+  const v=$('inp').value.trim();
+  if(isB64(v) && mode==='enc'){ setMode('dec'); }
+  schedule();
+});
+$('pw').addEventListener('input', schedule);
+$('inp').addEventListener('paste', ()=> setTimeout(()=>{ if(isB64($('inp').value.trim())) setMode('dec'); schedule(); },10));
+
+function schedule(){ clearTimeout(timer); timer=setTimeout(doConvert,260); }
+function setStatus(t,c){ const s=$('status'); s.textContent=t; s.className=c||''; }
+
+function b64e(buf){
+ let b=new Uint8Array(buf), s='', chunk=8192;
+ for(let i=0;i<b.length;i+=chunk) s+=String.fromCharCode.apply(null,b.subarray(i,i+chunk));
+ return btoa(s);
+}
+function b64d(str){
+ str=str.trim().replace(/\s/g,'').replace(/-/g,'+').replace(/_/g,'/');
+ str+='='.repeat((4-str.length%4)%4);
+ let bin=atob(str), out=new Uint8Array(bin.length);
+ for(let i=0;i<bin.length;i++) out[i]=bin.charCodeAt(i);
+ return out;
+}
+async function derive(pw,salt){
+ const m=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:600000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function doConvert(){
+ const input=$('inp').value;
+ const pw=$('pw').value||'a';
+ if(!input){ $('out').value=''; setStatus(''); return; }
+ const cur=++runId;
+ setStatus('…');
+ try{
+  let res;
+  if(mode==='enc'){
+   const salt=crypto.getRandomValues(new Uint8Array(16));
+   const iv=crypto.getRandomValues(new Uint8Array(12));
+   const key=await derive(pw,salt);
+   if(cur!==runId) return;
+   const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(input));
+   if(cur!==runId) return;
+   const out=new Uint8Array(1+salt.length+iv.length+ct.byteLength);
+   out[0]=1; out.set(salt,1); out.set(iv,17); out.set(new Uint8Array(ct),29);
+   res=b64e(out);
+   setStatus('● 已加密','ok');
+  }else{
+   const data=b64d(input);
+   const salt=data.slice(1,17), iv=data.slice(17,29), ct=data.slice(29);
+   const key=await derive(pw,salt);
+   if(cur!==runId) return;
+   const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+   if(cur!==runId) return;
+   res=dec.decode(pt);
+   setStatus('● 已解密','ok');
+  }
+  if(cur!==runId) return;
+  $('out').value=res;
+  $('out').style.height='auto';
+  $('out').style.height=Math.min(420, Math.max(120, $('out').scrollHeight))+'px';
+ }catch(e){
+  if(cur!==runId) return;
+  setStatus(mode==='dec'?'密碼錯或壞資料':'錯誤','err');
+  if(mode==='enc') $('out').value='';
+ }
+}
+setTimeout(schedule,80);
+function clearAll(){ $('inp').value=''; $('out').value=''; setStatus(''); runId++; $('inp').focus(); }
+function copyOut(){ if($('out').value) navigator.clipboard.writeText($('out').value).then(()=>setStatus('已複製','ok')); }
+function useAsInput(){ if(!$('out').value) return; $('inp').value=$('out').value; setMode(mode==='enc'?'dec':'enc'); }
+function swapMode(){ setMode(mode==='enc'?'dec':'enc'); if($('out').value) { $('inp').value=$('out').value; schedule(); } }
+</script>
+</body>
+</html>
